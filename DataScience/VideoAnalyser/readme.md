@@ -26,12 +26,13 @@ streamlit run app.py
 ```
 
 Once the application is running, follow the on-screen instructions to upload a video and generate a report based on the video content.
-Features
 
-    Video Processing: Converts videos into frames for analysis.
-    Story Generation: Leverages GPT-4 to create descriptive narratives from video frames.
-    User-Friendly Interface: Easy-to-use web interface built with Streamlit.
+## Features
 
-Contributing
+- Video Processing: Converts videos into frames for analysis.
+- Story Generation: Leverages GPT-4 to create descriptive narratives from video frames.
+- User-Friendly Interface: Easy-to-use web interface built with Streamlit.
+
+## Contributing
 
 Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change.

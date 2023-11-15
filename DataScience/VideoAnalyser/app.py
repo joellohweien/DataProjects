@@ -6,11 +6,7 @@ import cv2 # read video with open CV
 import base64, io, openai, os, requests, streamlit as st, tempfile, json
 
 # read in api_key
-with open('config.json', 'r') as config_file:
-    config_data = json.load(config_file)
-
-api_key = config_data[0]['api_key']
-openai.api_key = api_key
+openai.api_key = st.secrets["api_key"]
 
 # Step 1: Turn video into frames
 

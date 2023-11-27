@@ -37,7 +37,7 @@ To run this application, you will need Python installed on your system.
   ```
 5. **Run the Application**:
   ```sh
-  streamlit run app.py
+  streamlit run qna_chatbot_gpt_faiss.py
   ```
 
 ## Usage

@@ -9,16 +9,7 @@ from langchain.chains import LLMChain
 
 
 # Read API key
-try:
-    with open('config.json', 'r') as config_file:
-        config_data = json.load(config_file)
-        api_key = config_data["api_key"]
-except FileNotFoundError:
-    st.error("Config file not found.")
-    exit()
-except KeyError:
-    st.error("API key not found in config file.")
-    exit()
+api_key = st.secrets["api_key"]
 
 # 1. Vectorise the sales response csv data
 loader = CSVLoader(file_path="training_data.csv")

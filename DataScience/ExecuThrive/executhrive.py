@@ -6,22 +6,15 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
-
+import os
 
 # Read API key
-try:
-    with open('config.json', 'r') as config_file:
-        config_data = json.load(config_file)
-        api_key = config_data["api_key"]
-except FileNotFoundError:
-    st.error("Config file not found.")
-    exit()
-except KeyError:
-    st.error("API key not found in config file.")
-    exit()
+api_key = st.secrets["api_key"]
 
 # 1. Vectorise the sales response csv data
-loader = CSVLoader(file_path="./managementcoach/books_qna.csv")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+csv_file_path = os.path.join(dir_path, 'books_qna.csv')
+loader = CSVLoader(file_path=csv_file_path)
 documents = loader.load()
 embeddings = OpenAIEmbeddings(openai_api_key=api_key)
 db = FAISS.from_documents(documents, embeddings)

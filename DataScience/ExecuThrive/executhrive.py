@@ -86,10 +86,10 @@ def main():
     with st.sidebar:
         st.write("Question Guide")
         st.markdown("""
-            - **Communication Skills**: *"How can effective communication skills in executive leadership help in managing personal stress and maintaining work-life balance?"*
-            - **Innovation and Change**: *"In fostering a culture of innovation and managing organizational change, how can I also adapt to personal life changes and challenges?"*
-            - **Organizational Culture**: *"How can aligning my personal values with the organizational culture influence and shape a more empathetic and understanding workplace?"*
-            - **Leadership Challenges**: *"What strategies can help in overcoming leadership challenges while dealing with personal pressures, such as financial stress or maintaining relationships?"*
+            - **Communication Skills**: *"How do executive leaders use communication skills to balance work-life and manage stress?"*
+            - **Innovation and Change**: *"How do I best adapt to personal life changes while fostering innovation and managing organizational change?"*
+            - **Organizational Culture**: *"How does aligning personal values with organizational culture create a more empathetic workplace?"*
+            - **Leadership Challenges**: *"What strategies aid in handling leadership challenges and personal pressures like financial stress or relationships?"*
             """)
         
     # adding in a history section

@@ -6,13 +6,16 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
+import os
 
 
 # Read API key
 api_key = st.secrets["api_key"]
 
 # 1. Vectorise the sales response csv data
-loader = CSVLoader(file_path="training_data.csv")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+csv_file_path = os.path.join(dir_path, 'training_data.csv')
+loader = CSVLoader(file_path=csv_file_path)
 documents = loader.load()
 embeddings = OpenAIEmbeddings(openai_api_key=api_key)
 db = FAISS.from_documents(documents, embeddings)

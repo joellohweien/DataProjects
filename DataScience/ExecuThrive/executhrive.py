@@ -53,6 +53,8 @@ Your response should be informed by a blend of your extensive knowledge in busin
 
 6/ In your final output, you should summarise the response to four to five paragraphs, and NOT mention that there was a search history.
 
+7/ In your final output, you should summarise the response to four to five paragraphs.
+
 Here is your well-researched, comprehensive, and contextually relevant answer to the question:
 """
 

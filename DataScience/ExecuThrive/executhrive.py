@@ -51,7 +51,7 @@ Your response should be informed by a blend of your extensive knowledge in busin
 
 5/ In cases where new searches have been conducted, include a brief summary of these additional insights, demonstrating how they contribute to the comprehensiveness of your response.
 
-6/ In your final output, you should summarise the response, and NOT mention that there was a search history.
+6/ In your final output, you should summarise the response to four to five paragraphs, and NOT mention that there was a search history.
 
 Here is your well-researched, comprehensive, and contextually relevant answer to the question:
 """

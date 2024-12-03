@@ -1,0 +1,35 @@
+{
+  "documentType": "Lease Agreement",
+  "parties": {
+    "lender": {
+      "contact": {
+        "name": "",
+        "title": "",
+        "address": "",
+        "email": ""
+      }
+    },
+    "borrower": {
+      "contact": {
+        "name": "",
+        "title": "",
+        "address": "",
+        "email": ""
+      }
+    }
+  },
+  "loanTerms": {
+    "principalAmount": null,
+    "currency": "Unknown",
+    "interestRate": null,
+    "drawdownDate": "Unknown",
+    "repaymentTerm": "Unknown",
+    "interestPayment": {
+      "frequency": null,
+      "compounding": false,
+      "paymentDate": null
+    }
+  },
+  "eventsOfDefault": [],
+  "governingLaw": "Singapore"
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Processor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Document Processor</h1>
+        
+        <div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <form id="uploadForm" class="space-y-4">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center transition-all duration-200">
+                    <input type="file" id="fileInput" accept=".pdf" class="hidden">
+                    <label for="fileInput" class="cursor-pointer block">
+                        <div id="dropContent" class="space-y-2">
+                            <!-- This div will change based on file selection -->
+                            <div class="text-gray-600">Drop PDF file here or click to upload</div>
+                            <div class="text-sm text-gray-500">Maximum file size: 16MB</div>
+                        </div>
+                        <div id="fileSelected" class="hidden space-y-2">
+                            <div class="flex items-center justify-center space-x-2">
+                                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span id="fileName" class="text-green-600 font-medium"></span>
+                            </div>
+                            <div class="text-sm text-gray-500">Click to change file</div>
+                        </div>
+                    </label>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                    Process Document
+                </button>
+            </form>
+            
+            <div id="processingIndicator" class="mt-4 hidden">
+                <div class="flex items-center justify-center space-x-2">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                    <span class="text-blue-600">Processing document...</span>
+                </div>
+            </div>
+            
+            <div id="results" class="mt-8 hidden">
+                <h2 class="text-xl font-semibold mb-4">Processing Results</h2>
+                <div id="resultContent" class="space-y-4">
+                    <!-- Results will be inserted here -->
+                </div>
+                <div id="downloads" class="mt-4 space-y-2">
+                    <!-- Download links will be inserted here -->
+                </div>
+            </div>
+            
+            <div id="error" class="mt-4 hidden">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    <p id="errorMessage"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const dropContent = document.getElementById('dropContent');
+        const fileSelected = document.getElementById('fileSelected');
+        const fileName = document.getElementById('fileName');
+        const submitBtn = document.getElementById('submitBtn');
+        const processingIndicator = document.getElementById('processingIndicator');
+
+        function updateFileDisplay(file) {
+            if (file) {
+                dropContent.classList.add('hidden');
+                fileSelected.classList.remove('hidden');
+                fileName.textContent = file.name;
+                submitBtn.removeAttribute('disabled');
+            } else {
+                dropContent.classList.remove('hidden');
+                fileSelected.classList.add('hidden');
+                fileName.textContent = '';
+                submitBtn.setAttribute('disabled', 'true');
+            }
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            updateFileDisplay(e.target.files[0]);
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showError('Please select a file');
+                return;
+            }
+            
+            // Show processing indicator
+            processingIndicator.classList.remove('hidden');
+            submitBtn.setAttribute('disabled', 'true');
+            submitBtn.classList.add('bg-gray-400');
+            submitBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    showError(result.error);
+                    return;
+                }
+                
+                showResults(result);
+                
+            } catch (error) {
+                showError('An error occurred while processing the document');
+            } finally {
+                // Hide processing indicator and reset button
+                processingIndicator.classList.add('hidden');
+                submitBtn.removeAttribute('disabled');
+                submitBtn.classList.remove('bg-gray-400');
+                submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorDiv.classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+        }
+        
+        function showResults(result) {
+            const resultsDiv = document.getElementById('results');
+            const resultContent = document.getElementById('resultContent');
+            const downloadsDiv = document.getElementById('downloads');
+            
+            // Clear previous results
+            resultContent.innerHTML = '';
+            downloadsDiv.innerHTML = '';
+            
+            // Display JSON data
+            const pre = document.createElement('pre');
+            pre.className = 'bg-gray-100 p-4 rounded overflow-x-auto';
+            pre.textContent = JSON.stringify(result.results, null, 2);
+            resultContent.appendChild(pre);
+            
+            // Add download links
+            if (result.files) {
+                const jsonLink = createDownloadLink(result.files.json, 'Download JSON');
+                const mdLink = createDownloadLink(result.files.markdown, 'Download Markdown');
+                
+                downloadsDiv.appendChild(jsonLink);
+                downloadsDiv.appendChild(mdLink);
+            }
+            
+            resultsDiv.classList.remove('hidden');
+            document.getElementById('error').classList.add('hidden');
+        }
+        
+        function createDownloadLink(filename, text) {
+            const link = document.createElement('a');
+            link.href = `/download/${filename}`;
+            link.className = 'block w-full text-center bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition-colors';
+            link.textContent = text;
+            return link;
+        }
+        
+        // Handle drag and drop
+        const dropZone = document.querySelector('.border-dashed');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight(e) {
+            dropZone.classList.add('border-blue-500', 'bg-blue-50');
+        }
+        
+        function unhighlight(e) {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        }
+        
+        dropZone.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            fileInput.files = files;
+            updateFileDisplay(files[0]);
+        }
+    </script>
+</body>
+</html>

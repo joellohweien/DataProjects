@@ -1,0 +1,5 @@
+code_graveyard/
+data/
+rag_venv/
+*.pptx
+__pycache__/
